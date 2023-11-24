@@ -41,7 +41,7 @@ class net:
             
         
     def setCon(self,i,a,b,weight):
-        print("setCon")
+        #print("setCon")
         self.cons[i,0]=a
         self.cons[i,1]=b
         self.cons[i,2]=weight
@@ -58,8 +58,8 @@ class net:
         for x in range(self.nodeNum):
             print("Node " + str(x) + ":" +str(self.nodes[x]))
             
-    def mutateNet(self):
-        self.setCon(random.randrange(0,self.conNum),random.randrange(0,self.nodeNum),random.randrange(0,self.nodeNum),random.randrange(-10000,10000)/10000)
+
+    
 
         
     
