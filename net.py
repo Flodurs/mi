@@ -49,6 +49,7 @@ class net:
         
     def activationFunc(self,x):
         return np.tanh(x)
+        # return x
         
     def printCons(self):
         print(self.cons)
