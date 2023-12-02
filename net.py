@@ -1,14 +1,18 @@
 import numpy as np
+import random
+
 
 class net:
     
     def __init__(self,nodeNum,conNum):
         print("Net init")
+        random.seed()
         self.nodeNum = nodeNum
         self.nodes = np.zeros(self.nodeNum, dtype = float)
         self.cons = np.zeros((conNum,3))
         self.conPointer = 0
-        
+        for c in range(conNum):
+            self.setCon(c,random.randrange(0,self.nodeNum),random.randrange(0,self.nodeNum),random.randrange(-10000,10000)/10000)
         
     def setNode(self,i,value):
         #print("setNode")
@@ -58,6 +62,9 @@ class net:
         print("----------------------\n")
         for x in range(self.nodeNum):
             print("Node " + str(x) + ":" +str(self.nodes[x]))
+            
+    def printNetHash(self):
+        print("Hash: ",str(np.sum(self.nodes)))
             
 
     

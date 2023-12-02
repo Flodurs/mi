@@ -1,7 +1,7 @@
 
 
 class tic:
-    board  = [0]*9  
+    board  = []
     # 0 1 2
     # 3 4 5
     # 6 7 8
@@ -17,26 +17,33 @@ class tic:
             [6, 4, 2],]
     
     
-    spielender = 1
+    
     
 
     def __init__(self):
         #print("Init Tic Tac Toe")
-        pass
+        self.board = [0]*9
+        self.spielender = 1
+        self.moveCount = 0
         
     def move(self,feld):
         
+        self.moveCount+=1
+       
+        
+        if self.board[feld] != 0:
+            # print(feld)
+            # print("Illegal Move")
+            return -1
+            
+
+        self.board[feld] = self.spielender
+        # self.printBoard()
         
         if self.spielender == 1:
             self.spielender = 2
         else:
             self.spielender = 1
-        
-        if self.board[feld] != 0:
-            return -1
-
-        self.board[feld] = self.spielender
-        self.printBoard()
         
         return self.detectWin()
         
@@ -46,11 +53,11 @@ class tic:
     def detectWin(self):
         for win in self.wins:
             if self.board[win[0]]==1 and self.board[win[1]]==1 and self.board[win[2]]==1:
-                print("Player 1 Won")
+                # print("Player 1 Won xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
                 return 1
         for win in self.wins:
             if self.board[win[0]]==2 and self.board[win[1]]==2 and self.board[win[2]]==2:
-                print("Player 2 Won")
+                # print("Player 2 Won xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
                 return 2
         return 0
         
@@ -64,5 +71,7 @@ class tic:
             print(self.board[j],end="")
             if (j+1)%3 == 0:
                 print("")
-        
+    
+    def getMoveCount(self):
+        return self.moveCount
     
