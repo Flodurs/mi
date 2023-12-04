@@ -15,9 +15,11 @@ class ladder:
         self.gen = 0
         
         
-        self.nodeNum = 30
-        self.conNum = 100
-        self.agentNum = 20
+        self.nodeNum = 20
+        self.conNum = 40
+        self.agentNum = 30
+        
+        self.stepNum = 5
         
         
         self.ratings = [0.0] * self.agentNum
@@ -29,6 +31,8 @@ class ladder:
             
         self.movesPlayed = 0
         self.matchesPlayed = 0
+        
+        self.mutationRate = 39
         
     #play nxn matches and adjust elo    
     def playTournament(self):
@@ -82,7 +86,7 @@ class ladder:
             
             
             #step
-            for x in range(20):
+            for x in range(self.stepNum):
                 self.nets[playerA].step()
                 
             #retrieve output 
@@ -111,7 +115,7 @@ class ladder:
             
             
             #step
-            for x in range(20):
+            for x in range(self.stepNum):
                 self.nets[playerB].step()
                 
             #retrieve output 
@@ -137,13 +141,14 @@ class ladder:
         for i in range(self.agentNum):
             self.nets[i]=copy.deepcopy(bestAgent)
         
-        for i in range(self.agentNum-1):
-            for j in range(1):
+        for i in range(self.agentNum):
+            for j in range(2):
                 self.mutateNet(i)
                 
             
     
     
     def mutateNet(self,net):
-        self.nets[net].setCon(random.randrange(0,self.conNum),random.randrange(0,self.nodeNum),random.randrange(0,self.nodeNum),random.randrange(-10000,10000)/10000)
+        for i in range(int(random.randrange(0,self.conNum)/self.mutationRate)):
+            self.nets[net].setCon(random.randrange(0,self.conNum),random.randrange(0,self.nodeNum),random.randrange(0,self.nodeNum),random.randrange(-10000,10000)/5000)
         #print("Mutating: ", str(net))
