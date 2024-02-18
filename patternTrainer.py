@@ -25,7 +25,11 @@ ax1 = fig.add_subplot(1,1,1)
 
 
 
-size = 20
+size = 100
+inputNum = 3
+outputNum = 2
+
+
 d = darwin.darwin(size,10,20,5)
 
 
@@ -33,7 +37,7 @@ d = darwin.darwin(size,10,20,5)
 n = net.net(20,10)
 
 
-pattern = [[0,0,1,1],[1,0,1,-1],[1,0,0,0]] #node 0-2 input node 4 output
+pattern = [[0,0,1,1,1],[1,0,1,-1,1],[1,0,0,0,1],[1,1,1,1,-1,1],[0,0,0,0,0]] 
 
 
 
@@ -45,16 +49,18 @@ def calcError(geno):
     error = []
     for p in range(len(pattern)):    
         n.reset()
-        n.setNode(0,pattern[p][0])
-        n.setNode(1,pattern[p][1])
-        n.setNode(2,pattern[p][2])
+       
+        for i in range(inputNum):
+            n.setNode(i,pattern[p][i])
         for i in range(5):
             n.step()
-        error.append((pattern[p][3]-n.getNode(4))**2)
+            
+        for i in range(1,outputNum+1):
+            error.append((pattern[p][-i]-n.getNode(-i))**2)
     
     return mean(error)
 
-for time in range(100000):
+for time in range(10000):
     if time%499 == 0:
         ax1.plot(fbest)
         plt.draw()
@@ -86,12 +92,17 @@ for p in range(len(pattern)):
         print("Pattern " + str(p))
         print(pattern[p])
         n.reset()
-        n.setNode(0,pattern[p][0])
-        n.setNode(1,pattern[p][1])
-        n.setNode(2,pattern[p][2])
+           
+          
+           
+        for i in range(inputNum):
+            n.setNode(i,pattern[p][i])
         for i in range(5):
             n.step()
-        print(n.getNode(4))
+                
+        for i in range(1,outputNum+1):
+            print(n.getNode(-i))
+    
 
 
 plt.show()
