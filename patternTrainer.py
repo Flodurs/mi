@@ -28,16 +28,18 @@ ax1 = fig.add_subplot(1,1,1)
 size = 100
 inputNum = 3
 outputNum = 2
+conNum = 30
+nodeNum = 10
 
 
-d = darwin.darwin(size,10,20,5)
+d = darwin.darwin(size,nodeNum,conNum,5)
 
 
 
-n = net.net(20,10)
+n = net.net(conNum,nodeNum)
 
 
-pattern = [[0,0,1,1,1],[1,0,1,-1,1],[1,0,0,0,1],[1,1,1,1,-1,1],[0,0,0,0,0]] 
+pattern = [[0,0,1,1,1],[1,0,1,-1,1],[1,0,0,0,1],[1,1,1,1,-1,1],[-1,0,0,0,0]] 
 
 
 
