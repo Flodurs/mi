@@ -33,7 +33,7 @@ class tic:
         
         if self.board[feld] != 0:
             # print(feld)
-            # print("Illegal Move")
+            #print("Illegal Move")
             return -1
             
 
