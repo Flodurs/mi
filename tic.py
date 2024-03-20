@@ -7,6 +7,8 @@ class tic:
     # 6 7 8
     
     
+    
+    
     wins = [[0, 1, 2],
             [3, 4, 5],
             [6, 7, 8],
@@ -25,10 +27,14 @@ class tic:
         self.board = [0]*9
         self.spielender = 1
         self.moveCount = 0
+        self.totalMovesPlayed = 0
+        self.totalGamesPlayed = 0
+        
         
     def move(self,feld):
         
         self.moveCount+=1
+        self.totalMovesPlayed+=1
        
         
         if self.board[feld] != 0:
@@ -63,6 +69,13 @@ class tic:
         
     def resetBoard(self):
         self.board  = [0]*9  
+    
+    def resetStats(self):
+        self.totalGamesPlayed = 0
+        self.totalMovesPlayed = 0
+        
+    def getAvgMovesPerGame(self):
+        return self.totalMovesPlayed/self.totalGamesPlayed
         
     def printBoard(self):
         print("-----------------")

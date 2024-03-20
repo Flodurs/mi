@@ -39,7 +39,7 @@ d = darwin.darwin(size,nodeNum,conNum,5)
 n = net.net(conNum,nodeNum)
 
 
-pattern = [[0,0,1,1,1],[1,0,1,-1,1],[1,0,0,0,1],[1,1,1,1,-1,1],[-1,0,0,0,0]] 
+pattern = [[0,0,1,1,1],[1,0,1,-1,1]] 
 
 
 
