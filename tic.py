@@ -59,23 +59,27 @@ class tic:
     def detectWin(self):
         for win in self.wins:
             if self.board[win[0]]==1 and self.board[win[1]]==1 and self.board[win[2]]==1:
-                # print("Player 1 Won xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                print("Player 1 Won xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
                 return 1
         for win in self.wins:
             if self.board[win[0]]==2 and self.board[win[1]]==2 and self.board[win[2]]==2:
-                # print("Player 2 Won xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                print("Player 2 Won xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
                 return 2
         return 0
         
     def resetBoard(self):
         self.board  = [0]*9  
+        self.totalGamesPlayed+=1
+        self.moveCount = 0
     
     def resetStats(self):
         self.totalGamesPlayed = 0
         self.totalMovesPlayed = 0
         
     def getAvgMovesPerGame(self):
-        return self.totalMovesPlayed/self.totalGamesPlayed
+        if self.totalGamesPlayed != 0:
+            return self.totalMovesPlayed/self.totalGamesPlayed
+        return 0
         
     def printBoard(self):
         print("-----------------")

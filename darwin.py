@@ -1,9 +1,9 @@
 import random
 import copy
-
+import statistics
 
 class darwin:
-    def __init__(self,genoTypeNum,conNum,nodeNum,oldGenoTypesNum):
+    def __init__(self,genoTypeNum,conNum,nodeNum,oldGenoTypeNum):
         print("Init darwin")
         
         
@@ -16,7 +16,7 @@ class darwin:
         #Bruh stacked * with lists doesnt do what i thought it does (only do it once)
         self.genoTypes = [ [[0, 0, 0.0] for i in range(conNum)] for x in range(genoTypeNum)]
         
-        self.oldGenoTypes = [[[[0, 0.0, 0.0]]*conNum]*genoTypeNum]*oldGenoTypesNum
+        self.oldGenoTypes = [ [[0, 0, 0.0] for i in range(conNum)] for x in range(oldGenoTypeNum)]
         
         
         
@@ -57,8 +57,9 @@ class darwin:
                 
                 #print(self.genoTypes[i])
         
-    def mutateGenoType(self,genoTypeIndex):
-        if random.randrange(0,2) == 0:
+    def mutateGenoType(self,genoTypeIndex,mutationRate):
+        
+        while random.randrange(0,1000) < mutationRate:
             index = random.randrange(0,self.conNum)
             
             self.genoTypes[genoTypeIndex][index][0]=random.randrange(0,self.nodeNum)
@@ -74,7 +75,23 @@ class darwin:
         #I1: Leave one unmutated
         
         #calc top performers
-        topIndex = fitnessList.index(min(fitnessList))
+        
+        
+        #calc average Fitness
+        meanFit = statistics.mean(fitnessList)
+        print(meanFit)
+        
+        
+        
+        
+        
+        
+        topIndex = fitnessList.index(max(fitnessList))
+        
+        
+        
+        
+        
         # print("-----------------\nAG:")
         # print(topIndex)
         # print(fitnessList)
@@ -87,22 +104,20 @@ class darwin:
                 self.allTimeBest[j][1]=self.genoTypes[topIndex][j][1]
                 self.allTimeBest[j][2]=self.genoTypes[topIndex][j][2]
         
-
-
+        
+        
+        for i in range(self.genoTypeNum):
+            if fitnessList[i] <= meanFit:
+                self.mutateGenoType(i,900)
+                if random.randrange(0,20) == 1:
+                    print("split")
+                    for j in range(self.conNum):
+                        self.genoTypes[i][j][0]=self.genoTypes[topIndex][j][0]
+                        self.genoTypes[i][j][1]=self.genoTypes[topIndex][j][1]
+                        self.genoTypes[i][j][2]=self.genoTypes[topIndex][j][2]
+            else:
+                self.mutateGenoType(i,400)
+        
        
-        # for i in range(self.genoTypeNum):
-            # self.genoTypes[i]=copy.deepcopy(self.genoTypes[topIndex])
-        
-        for i in range(self.genoTypeNum):
-            for j in range(self.conNum):
-                self.genoTypes[i][j][0]=self.genoTypes[topIndex][j][0]
-                self.genoTypes[i][j][1]=self.genoTypes[topIndex][j][1]
-                self.genoTypes[i][j][2]=self.genoTypes[topIndex][j][2]
-        
-        
-        
-        for i in range(self.genoTypeNum):
-            if i != -1:
-                self.mutateGenoType(i)
         
         

@@ -1,29 +1,34 @@
 import darwin
 import net
 import tic
+import random
+import eloSystem
+
 
 #net Parameter
 conNum = 200
-nodeNum = 30
-stepNum = 10
+nodeNum = 50
+stepNum = 4
 
 #darwin Parameter
-playerNum = 10
+playerNum = 30
 
 
 
 #innit
 
-ratings = [0.0]*playerNum
 
 
+t = tic.tic()
 darw = darwin.darwin(playerNum,conNum,nodeNum,1) 
 netzA = net.net(conNum,nodeNum)
 netzB = net.net(conNum,nodeNum)
 
-#statistics
-avgMovesList = [0]*playerNum
 
+#stats
+
+moveNumList = [0]*playerNum
+gameNumList = [0]*playerNum
 
 
 def processInput(pos):
@@ -39,36 +44,46 @@ def processInput(pos):
     return input     
 
 
-def evaluateNet(net):
+def evaluateNet():
     #print("-------")
-    for b in range(playerNum):
-        if a != b:
+    eloSys = eloSystem.eloSystem(playerNum)
+    for i in range(50):
+        for j in range(playerNum):
+            opponent = random.randrange(0,playerNum)
             
-            result = playMatch(net,b)
-                
-            if result[1] == net:
-                #print(net)
-                ratings[net]+=1
-            else:
-                ratings[b]+=1
             
-            avgMovesList[net]+=result[0]
+            resultA = playMatch(j,opponent)
+            eloSys.matchPlayed(j,opponent,resultA[1])
             
-            result = playMatch(b,net)
-                
-            if result[1] == net:
-                ratings[net]+=1
-            else:
-                ratings[b]+=1
+           #update Stats
+            moveNumList[j]+=resultA[0]
+            moveNumList[opponent]+=resultA[0]
             
-            avgMovesList[net]+=result[0]
+            gameNumList[j]+=1
+            gameNumList[opponent]+=1
             
+            
+            resultA = playMatch(opponent,j)
+            eloSys.matchPlayed(opponent,j,resultA[1])
+            
+            #update Stats
+            moveNumList[j]+=resultA[0]
+            moveNumList[opponent]+=resultA[0]
+            
+            gameNumList[j]+=1
+            gameNumList[opponent]+=1
+            
+            
+            
+    eloSys.printElos()
+    return eloSys.getElos()
+    
             
             
 
 def playMatch(a,b):
 
-    t = tic.tic()
+    t.resetBoard()
     netzA.setFromGenoType(darw.getGenoType(a))
     netzB.setFromGenoType(darw.getGenoType(b))
     while 1:
@@ -87,18 +102,18 @@ def playMatch(a,b):
         for x in range(stepNum):
             netzA.step()
         for x in range(9):
-            output.append(netzA.getNode(x+11))
+            output.append(netzA.getNode(x+13))
             
         move = output.index(max(output))
         
         result = t.move(move) 
         
         if result == 1:
-            return t.getMoveCount(),a
+            return t.getMoveCount(),1
         if result == 2:
-            return t.getMoveCount(),b
+            return t.getMoveCount(),0
         if result == -1:
-            return t.getMoveCount(),b
+            return t.getMoveCount(),0
         
         #Spieler B Zug
         pos =  t.getBoard()
@@ -116,29 +131,34 @@ def playMatch(a,b):
         result = t.move(move) 
         
         if result == 1:
-            return t.getMoveCount(),b
+            return t.getMoveCount(),0
         if result == 2:
-            return t.getMoveCount(),a
+            return t.getMoveCount(),1
         if result == -1:
-            return t.getMoveCount(),a
+            return t.getMoveCount(),1
 
 
 for i in range(99999):
-    ratings = [0.0]*playerNum
-    avgMovesList = [0]*playerNum
-    for a in range(playerNum):
-        evaluateNet(a)
-    #print("-----------------")
-    print(sum(avgMovesList)/((18+18)*10),end="")
+
+    avgMoves = []
+    for i in range(playerNum):
+        moveNumList[i] = 0
+        gameNumList[i] = 0
     
+    ratings = evaluateNet()
+ 
+    
+    for i in range(playerNum):
+        avgMoves.append(round(moveNumList[i]/gameNumList[i], 2))
+        
+    print(avgMoves)
+ 
+    print(t.getAvgMovesPerGame())
+    t.resetStats()
     
     #advance Generation
-    print(ratings)
-    for j in range(len(ratings)):
-        if ratings[j] != 0:
-            ratings[j]=1/ratings[j]
-        else:
-            ratings[j]=99999
+    
+    
    
     darw.advanceGeneration(ratings)
    
