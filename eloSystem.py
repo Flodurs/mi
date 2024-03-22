@@ -1,5 +1,5 @@
 # Implements an elo System to evaluate Agent strength in self play
-# k-Fakotr = 15 like in tennis (they have constant k=15 i assume for a reason)
+# k-Faktor = 15 like in tennis (they have constant k=15 i assume for a reason)
 # division by 400 like chess aka 400 Point elo difference corresponds to expected 0.91 score for the higher rated Agent(Player)
 
 class eloSystem:

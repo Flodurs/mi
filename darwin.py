@@ -1,6 +1,7 @@
 import random
 import copy
 import statistics
+import numpy as np
 
 class darwin:
     def __init__(self,genoTypeNum,conNum,nodeNum,oldGenoTypeNum):
@@ -17,7 +18,7 @@ class darwin:
         self.genoTypes = [ [[0, 0, 0.0] for i in range(conNum)] for x in range(genoTypeNum)]
         
         self.oldGenoTypes = [ [[0, 0, 0.0] for i in range(conNum)] for x in range(oldGenoTypeNum)]
-        
+        self.oldGenoTypePointer = 0;
         
         
         self.allTimeBest = [[0, 0, 0.0] for i in range(conNum)]
@@ -26,7 +27,13 @@ class darwin:
         
         self.randomizeGenoTypes()
         
+    def storeOldGenoType(genoTypeIndex):
+        pass
         
+    def insertOldGenoTypesIntoPop(amount,location):
+        pass
+    
+    
         
     def getAllTimeBest(self):
         return self.allTimeBest
@@ -61,9 +68,9 @@ class darwin:
         
         while random.randrange(0,1000) < mutationRate:
             index = random.randrange(0,self.conNum)
-            
-            self.genoTypes[genoTypeIndex][index][0]=random.randrange(0,self.nodeNum)
-            self.genoTypes[genoTypeIndex][index][1]=random.randrange(0,self.nodeNum)
+            if random.randrange(0,3)==1:
+                self.genoTypes[genoTypeIndex][index][0]=random.randrange(0,self.nodeNum)
+                self.genoTypes[genoTypeIndex][index][1]=random.randrange(0,self.nodeNum)
             self.genoTypes[genoTypeIndex][index][2]+=random.randrange(-1000,1000)/5000
         
         
@@ -87,6 +94,9 @@ class darwin:
         
         
         topIndex = fitnessList.index(max(fitnessList))
+        maxFit = max(fitnessList)
+        
+        indicesSort = np.argsort(fitnessList)
         
         
         
@@ -106,17 +116,18 @@ class darwin:
         
         
         
+        
+            
+        for i in range(6):
+            for j in range(self.conNum):
+                self.genoTypes[indicesSort[i]][j][0]=self.genoTypes[indicesSort[-(i+1)]][j][0]
+                self.genoTypes[indicesSort[i]][j][1]=self.genoTypes[indicesSort[-(i+1)]][j][1]
+                self.genoTypes[indicesSort[i]][j][2]=self.genoTypes[indicesSort[-(i+1)]][j][2]
+            
         for i in range(self.genoTypeNum):
-            if fitnessList[i] <= meanFit:
-                self.mutateGenoType(i,900)
-                if random.randrange(0,20) == 1:
-                    print("split")
-                    for j in range(self.conNum):
-                        self.genoTypes[i][j][0]=self.genoTypes[topIndex][j][0]
-                        self.genoTypes[i][j][1]=self.genoTypes[topIndex][j][1]
-                        self.genoTypes[i][j][2]=self.genoTypes[topIndex][j][2]
-            else:
-                self.mutateGenoType(i,400)
+            self.mutateGenoType(i,900)    
+            
+        
         
        
         

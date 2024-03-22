@@ -8,11 +8,11 @@ import logging
 
 #net Parameter
 conNum = 200
-nodeNum = 50
-stepNum = 4
+nodeNum = 30
+stepNum = 6
 
 #darwin Parameter
-playerNum = 30
+playerNum = 40
 
 
 #logging
