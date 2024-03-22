@@ -3,6 +3,7 @@ import net
 import tic
 import random
 import eloSystem
+import logging
 
 
 #net Parameter
@@ -12,6 +13,13 @@ stepNum = 4
 
 #darwin Parameter
 playerNum = 30
+
+
+#logging
+
+
+logging.basicConfig(filename='D:/Dev/miVis/public/training.html', filemode='w', format='<p>%(message)s<p>', level=logging.INFO)
+
 
 
 
@@ -152,6 +160,11 @@ for i in range(99999):
         avgMoves.append(round(moveNumList[i]/gameNumList[i], 2))
         
     print(avgMoves)
+    logging.info(ratings)
+    logging.info(avgMoves)
+    logging.info("-------------------------------------------------------------------------------------------")
+    
+    
  
     print(t.getAvgMovesPerGame())
     t.resetStats()

@@ -1,5 +1,12 @@
 <!DOCTYPE html>
+
+<body>
+
+<a href="training.html">Rohdaten</a>
 <div id="container"></div>
+
+
+</body>
 <script type="module">
 
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
@@ -11,16 +18,14 @@ const marginTop = 20;
 const marginRight = 20;
 const marginBottom = 30;
 const marginLeft = 40;
-const xScale = 200;
-const yScale = 200;
+var xScale = 200;
+var yScale = 4.0;
 
 var dataset1 = [
-            [0,0], [12,20], [24,36],
-            [32, 50], [40, 70], [50, 100],
-            [55, 100], [65, 100], [73, 100],
-            [78, 100], [83, 100], [89, 100],
-            [100, 100]
+           
         ];
+		
+var avg = []
 
 
 
@@ -34,43 +39,125 @@ function transformPointY(y) {
 	return newY;
 }
 
+function convertStringArrayToFloat(strArray) {
+	var floatArray = [];
+	for (let i = 0; i < strArray.length; i++) {
+		floatArray.push(parseFloat(strArray[i]));
+	}
+	return floatArray;
+}
 
-// Declare the x (horizontal position) scale.
-const x = d3.scaleLinear()
-    .domain([0, xScale])
-    .range([marginLeft, width - marginRight]);
+function calculateAverage(fArray) {
+ var sum = 0
+ for (let i = 0; i < strArray.length; i++) {
+ 
+ 
+ }
+}
 
-// Declare the y (vertical position) scale.
-const y = d3.scaleLinear()
-    .domain([0, yScale])
-    .range([height - marginBottom, marginTop]);
-
-// Create the SVG container.
-const svg = d3.create("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-// Add the x-axis.
-svg.append("g")
-    .attr("transform", `translate(0,${height - marginBottom})`)
-    .call(d3.axisBottom(x));
-
-// Add the y-axis.
-svg.append("g")
-    .attr("transform", `translate(${marginLeft},0)`)
-    .call(d3.axisLeft(y));
+function getData() {
 	
-svg.append('path')
-	.datum(dataset1)
-    .style("stroke", "steelblue")
-    .style("stroke-width", 2)
-    .attr("d", d3.line()
-        .x(function(d) { return transformPointX(d[0]); })
-        .y(function(d) { return transformPointY(d[1]); })
-        )
-	.style("fill", "none")
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		   
+			 
+			var re = new RegExp('<p>', 'g');
+			var str = xhttp.responseText.replace(re, '');
+			
+			re = new RegExp(' ', 'g');
+			str = str.replace(re, '');
+			
+			re = new RegExp('\\]', 'g');
+			str = str.replace(re, '');
+			
+			re = new RegExp('\\[', 'g');
+			str = str.replace(re, '');
+			 
+			var lines=str.split('\r\n');
+			var importantlines = [];
+			 
+			for (let i = 1; i < lines.length; i+=3) {
+				importantlines.push(lines[i]);
+			} 
+			 
+			
+			var averageMoves = [];
+			
+			for (let i = 0; i < importantlines.length; i++) {
+				averageMoves.push(Math.max(...convertStringArrayToFloat(importantlines[i].split(','))));
+				//console.log(Math.max(...convertStringArrayToFloat(importantlines[i].split(','))));
+			}
+			
+			drawGraph(averageMoves);
+			
+			}
+		
+			
+	};
+xhttp.open("GET", "training.html", true);
+xhttp.send();
 
-// Append the SVG element.
-container.append(svg.node());
+}
+
+function reloadWebsite() {
+	location.reload();
+}
+
+getData();
+
+setInterval(reloadWebsite, 3000);
+
+
+function drawGraph(dataY) {
+	var data = []
+	console.log(dataY);
+	//build data
+	for (let i = 0; i < dataY.length; i++) {
+		data.push([i,dataY[i]])
+	}
+	
+	yScale = Math.max(...dataY);
+	xScale = dataY.length;
+	
+	// Declare the x (horizontal position) scale.
+	const x = d3.scaleLinear()
+		.domain([0, xScale])
+		.range([marginLeft, width - marginRight]);
+
+	// Declare the y (vertical position) scale.
+	const y = d3.scaleLinear()
+		.domain([0.0, yScale])
+		.range([height - marginBottom, marginTop]);
+		
+	// Create the SVG container.
+	const svg = d3.create("svg")
+		.attr("width", width)
+		.attr("height", height);
+
+	// Add the x-axis.
+	svg.append("g")
+		.attr("transform", `translate(0,${height - marginBottom})`)
+		.call(d3.axisBottom(x));
+
+	// Add the y-axis.
+	svg.append("g")
+		.attr("transform", `translate(${marginLeft},0)`)
+		.call(d3.axisLeft(y));
+		
+	svg.append('path')
+		.datum(data)
+		.style("stroke", "steelblue")
+		.style("stroke-width", 2)
+		.attr("d", d3.line()
+			.x(function(d) { return transformPointX(d[0]); })
+			.y(function(d) { return transformPointY(d[1]); })
+			)
+		.style("fill", "none")
+
+	// Append the SVG element.
+	container.append(svg.node());
+
+}
 
 </script>
