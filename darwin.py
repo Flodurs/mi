@@ -10,6 +10,7 @@ class darwin:
         
         random.seed()
         self.genoTypeNum = genoTypeNum
+        self.oldGenoTypeNum = oldGenoTypeNum
         self.conNum = conNum
         self.nodeNum = nodeNum
        
@@ -24,14 +25,33 @@ class darwin:
         self.allTimeBest = [[0, 0, 0.0] for i in range(conNum)]
         self.allTimeBestFit = 9999
         
+        self.generation = 0
+        
         
         self.randomizeGenoTypes()
         
-    def storeOldGenoType(genoTypeIndex):
-        pass
         
-    def insertOldGenoTypesIntoPop(amount,location):
-        pass
+        
+        
+    def storeOldGenoType(self,genoTypeIndex):
+        for j in range(self.conNum):
+            self.oldGenoTypes[self.oldGenoTypePointer][j][0]=self.genoTypes[genoTypeIndex][j][0]
+            self.oldGenoTypes[self.oldGenoTypePointer][j][1]=self.genoTypes[genoTypeIndex][j][1]
+            self.oldGenoTypes[self.oldGenoTypePointer][j][2]=self.genoTypes[genoTypeIndex][j][2]
+            
+        self.oldGenoTypePointer+=1
+        if self.oldGenoTypePointer >= self.oldGenoTypeNum:
+            self.oldGenoTypePointer = 0
+        
+        
+    def insertOldGenoTypeIntoPop(self,targetGenoTypeIndex):
+        
+        randomOldIndex = random.randrange(0,self.oldGenoTypeNum)
+       
+        for j in range(self.conNum):
+            self.genoTypes[targetGenoTypeIndex][j][0]=self.oldGenoTypes[randomOldIndex][j][0]
+            self.genoTypes[targetGenoTypeIndex][j][1]=self.oldGenoTypes[randomOldIndex][j][1]
+            self.genoTypes[targetGenoTypeIndex][j][2]=self.oldGenoTypes[randomOldIndex][j][2]
     
     
         
@@ -78,10 +98,8 @@ class darwin:
         pass
         
     def advanceGeneration(self,fitnessList):
-        #take n top performers, mutate them and replace current gene Pool with them
-        #I1: Leave one unmutated
         
-        #calc top performers
+        self.generation += 1
         
         
         #calc average Fitness
@@ -93,7 +111,7 @@ class darwin:
         
         
         
-        topIndex = fitnessList.index(max(fitnessList))
+     
         maxFit = max(fitnessList)
         
         indicesSort = np.argsort(fitnessList)
@@ -102,30 +120,30 @@ class darwin:
         
         
         
-        # print("-----------------\nAG:")
-        # print(topIndex)
-        # print(fitnessList)
+      
         
-        #store all time best
-        if min(fitnessList) < self.allTimeBestFit :
-            self.allTimeBestFit = min(fitnessList)
-            for j in range(self.conNum):
-                self.allTimeBest[j][0]=self.genoTypes[topIndex][j][0]
-                self.allTimeBest[j][1]=self.genoTypes[topIndex][j][1]
-                self.allTimeBest[j][2]=self.genoTypes[topIndex][j][2]
+       
+        
+        
+        if self.generation%2 == 0:
+            self.storeOldGenoType(indicesSort[-1])
         
         
         
-        
-            
+        #split   
         for i in range(6):
             for j in range(self.conNum):
                 self.genoTypes[indicesSort[i]][j][0]=self.genoTypes[indicesSort[-(i+1)]][j][0]
                 self.genoTypes[indicesSort[i]][j][1]=self.genoTypes[indicesSort[-(i+1)]][j][1]
                 self.genoTypes[indicesSort[i]][j][2]=self.genoTypes[indicesSort[-(i+1)]][j][2]
-            
+        #mutate    
         for i in range(self.genoTypeNum):
             self.mutateGenoType(i,900)    
+        
+        #insert old genotypes
+        for i in range(10):
+            self.insertOldGenoTypeIntoPop(indicesSort[7+i])
+        
             
         
         

@@ -7,8 +7,8 @@ import logging
 
 
 #net Parameter
-conNum = 200
-nodeNum = 30
+conNum = 400
+nodeNum = 50
 stepNum = 6
 
 #darwin Parameter
@@ -28,7 +28,7 @@ logging.basicConfig(filename='D:/Dev/miVis/public/training.html', filemode='w', 
 
 
 t = tic.tic()
-darw = darwin.darwin(playerNum,conNum,nodeNum,1) 
+darw = darwin.darwin(playerNum,conNum,nodeNum,100) 
 netzA = net.net(conNum,nodeNum)
 netzB = net.net(conNum,nodeNum)
 
