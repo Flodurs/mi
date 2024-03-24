@@ -7,12 +7,12 @@ import logging
 
 
 #net Parameter
-conNum = 400
-nodeNum = 50
-stepNum = 6
+conNum = 100
+nodeNum = 30
+stepNum = 4
 
 #darwin Parameter
-playerNum = 40
+playerNum = 30
 
 
 #logging
@@ -27,10 +27,10 @@ logging.basicConfig(filename='D:/Dev/miVis/public/training.html', filemode='w', 
 
 
 
-t = tic.tic()
+t = tic.tic(1)
 darw = darwin.darwin(playerNum,conNum,nodeNum,100) 
-netzA = net.net(conNum,nodeNum)
-netzB = net.net(conNum,nodeNum)
+netzA = net.net(nodeNum,conNum)
+netzB = net.net(nodeNum,conNum)
 
 
 #stats
@@ -48,14 +48,14 @@ def processInput(pos):
             input.append(-1)
         if j == 0:
             input.append(0)    
-        input.append(1)
+    input.append(1)
     return input     
 
 
 def evaluateNet():
     #print("-------")
     eloSys = eloSystem.eloSystem(playerNum)
-    for i in range(50):
+    for i in range(40):
         for j in range(playerNum):
             opponent = random.randrange(0,playerNum)
             
@@ -85,7 +85,7 @@ def evaluateNet():
             
     eloSys.printElos()
     return eloSys.getElos()
-    
+
             
             
 
@@ -94,6 +94,7 @@ def playMatch(a,b):
     t.resetBoard()
     netzA.setFromGenoType(darw.getGenoType(a))
     netzB.setFromGenoType(darw.getGenoType(b))
+    #print("--------")
     while 1:
         netzA.reset()
         netzB.reset()
@@ -105,6 +106,7 @@ def playMatch(a,b):
         pos =  t.getBoard()
         input = processInput(pos)
         output=[]
+        #print(input)
         for x in range(10):
             netzA.setNode(x,input[x])
         for x in range(stepNum):
@@ -139,11 +141,20 @@ def playMatch(a,b):
         result = t.move(move) 
         
         if result == 1:
-            return t.getMoveCount(),0
-        if result == 2:
             return t.getMoveCount(),1
+        if result == 2:
+            return t.getMoveCount(),0
         if result == -1:
             return t.getMoveCount(),1
+            
+def playAndSafeSampleMatches(agent,amount):
+    for i in range(amount):
+        opponent = random.randrange(0,playerNum)
+        resultA = playMatch(agent,opponent)
+        t.saveMatch()
+        resultA = playMatch(opponent,agent)
+        t.saveMatch()
+        
 
 
 for i in range(99999):
@@ -160,20 +171,18 @@ for i in range(99999):
         avgMoves.append(round(moveNumList[i]/gameNumList[i], 2))
         
     print(avgMoves)
+    print(ratings)
     logging.info(ratings)
     logging.info(avgMoves)
     logging.info("-------------------------------------------------------------------------------------------")
-    
-    
- 
     print(t.getAvgMovesPerGame())
     t.resetStats()
     
+    
+    playAndSafeSampleMatches(ratings.index(max(ratings)),10)
+    
     #advance Generation
     
-    
-   
     darw.advanceGeneration(ratings)
    
-    #print/collect Progress
     

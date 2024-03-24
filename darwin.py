@@ -2,6 +2,8 @@ import random
 import copy
 import statistics
 import numpy as np
+import os
+
 
 class darwin:
     def __init__(self,genoTypeNum,conNum,nodeNum,oldGenoTypeNum):
@@ -29,6 +31,10 @@ class darwin:
         
         
         self.randomizeGenoTypes()
+        
+        import os
+        if os.path.exists("D:/Dev/miVis/public/matches.html"):
+            os.remove("D:/Dev/miVis/public/matches.html")
         
         
         
@@ -125,23 +131,23 @@ class darwin:
        
         
         
-        if self.generation%2 == 0:
+        if self.generation%5 == 0:
             self.storeOldGenoType(indicesSort[-1])
         
         
         
         #split   
-        for i in range(6):
+        for i in range(3):
             for j in range(self.conNum):
                 self.genoTypes[indicesSort[i]][j][0]=self.genoTypes[indicesSort[-(i+1)]][j][0]
                 self.genoTypes[indicesSort[i]][j][1]=self.genoTypes[indicesSort[-(i+1)]][j][1]
                 self.genoTypes[indicesSort[i]][j][2]=self.genoTypes[indicesSort[-(i+1)]][j][2]
         #mutate    
         for i in range(self.genoTypeNum):
-            self.mutateGenoType(i,900)    
+            self.mutateGenoType(i,600)    
         
         #insert old genotypes
-        for i in range(10):
+        for i in range(5):
             self.insertOldGenoTypeIntoPop(indicesSort[7+i])
         
             
