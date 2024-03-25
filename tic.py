@@ -71,7 +71,10 @@ class tic:
             if self.board[win[0]]==2 and self.board[win[1]]==2 and self.board[win[2]]==2:
                 #print("Player 2 Won xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
                 return 2
-        return 0
+        if self.moveCount == 9:
+            return 0
+        return 999
+        
         
     def resetBoard(self):
         self.board  = [0]*9  

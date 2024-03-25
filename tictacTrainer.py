@@ -7,8 +7,8 @@ import logging
 
 
 #net Parameter
-conNum = 100
-nodeNum = 30
+conNum = 1000
+nodeNum = 40
 stepNum = 4
 
 #darwin Parameter
@@ -124,6 +124,8 @@ def playMatch(a,b):
             return t.getMoveCount(),0
         if result == -1:
             return t.getMoveCount(),0
+        if result == 0:
+            return 0.5
         
         #Spieler B Zug
         pos =  t.getBoard()
@@ -146,6 +148,8 @@ def playMatch(a,b):
             return t.getMoveCount(),0
         if result == -1:
             return t.getMoveCount(),1
+        if result == 0:
+            return 0.5
             
 def playAndSafeSampleMatches(agent,amount):
     for i in range(amount):
