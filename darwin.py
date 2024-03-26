@@ -29,6 +29,8 @@ class darwin:
         
         self.generation = 0
         
+        self.firstWindowFlag = 0
+        
         
         self.randomizeGenoTypes()
         
@@ -47,12 +49,17 @@ class darwin:
             
         self.oldGenoTypePointer+=1
         if self.oldGenoTypePointer >= self.oldGenoTypeNum:
+            self.firstWindowFlag = 1
             self.oldGenoTypePointer = 0
         
         
     def insertOldGenoTypeIntoPop(self,targetGenoTypeIndex):
-        
-        randomOldIndex = random.randrange(0,self.oldGenoTypeNum)
+        randomOldIndex = 0;
+        if self.firstWindowFlag == 1:
+            randomOldIndex = random.randrange(0,self.oldGenoTypeNum)
+        else:
+            if self.oldGenoTypePointer != 0:
+                randomOldIndex = random.randrange(0,self.oldGenoTypePointer)
        
         for j in range(self.conNum):
             self.genoTypes[targetGenoTypeIndex][j][0]=self.oldGenoTypes[randomOldIndex][j][0]
@@ -137,18 +144,18 @@ class darwin:
         
         
         #split   
-        for i in range(3):
+        for i in range(10):
             for j in range(self.conNum):
                 self.genoTypes[indicesSort[i]][j][0]=self.genoTypes[indicesSort[-(i+1)]][j][0]
                 self.genoTypes[indicesSort[i]][j][1]=self.genoTypes[indicesSort[-(i+1)]][j][1]
                 self.genoTypes[indicesSort[i]][j][2]=self.genoTypes[indicesSort[-(i+1)]][j][2]
         #mutate    
         for i in range(self.genoTypeNum):
-            self.mutateGenoType(i,600)    
+            self.mutateGenoType(i,700)    
         
         #insert old genotypes
-        for i in range(5):
-            self.insertOldGenoTypeIntoPop(indicesSort[7+i])
+        for i in range(10):
+            self.insertOldGenoTypeIntoPop(indicesSort[10+i])
         
             
         

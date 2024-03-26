@@ -7,9 +7,9 @@ import logging
 
 
 #net Parameter
-conNum = 1000
-nodeNum = 40
-stepNum = 4
+conNum = 400
+nodeNum = 50
+stepNum = 10
 
 #darwin Parameter
 playerNum = 30
@@ -55,7 +55,7 @@ def processInput(pos):
 def evaluateNet():
     #print("-------")
     eloSys = eloSystem.eloSystem(playerNum)
-    for i in range(40):
+    for i in range(10):
         for j in range(playerNum):
             opponent = random.randrange(0,playerNum)
             
@@ -125,7 +125,7 @@ def playMatch(a,b):
         if result == -1:
             return t.getMoveCount(),0
         if result == 0:
-            return 0.5
+            return t.getMoveCount(),0.5
         
         #Spieler B Zug
         pos =  t.getBoard()
@@ -149,7 +149,7 @@ def playMatch(a,b):
         if result == -1:
             return t.getMoveCount(),1
         if result == 0:
-            return 0.5
+            return t.getMoveCount(),0.5
             
 def playAndSafeSampleMatches(agent,amount):
     for i in range(amount):
